@@ -6,8 +6,8 @@ Three sub-commands:
   snapshot  Read a block of registers and save them to a JSON file.
   diff      Compare two snapshots and list registers that changed,
             decoded as UINT16, INT16 and big-endian INT32.
-  watch     Print a few registers live (INT32) so you can correlate them
-            with a load you switch on and off.
+  watch     Print registers live, each shown as INT16 (that register alone)
+            and INT32 (that register + the next, high word first).
 
 Typical workflow for the EPS / backup port:
 
@@ -22,7 +22,7 @@ Typical workflow for the EPS / backup port:
   4. Compare, telling the tool roughly what the app showed:
          python3 scan_registers.py diff eps_off.json eps_on.json --expect 1200
   5. Confirm the best candidate live while toggling the load:
-         python3 scan_registers.py watch --host 192.168.1.50 --addr 10233 --addr 10208
+         python3 scan_registers.py watch --host 192.168.1.50 --addr 10233 --addr 10010
 
 Requires: pip install "pymodbus>=3.10,<4"
 """
@@ -243,16 +243,24 @@ def cmd_diff(args) -> None:
 
 
 def cmd_watch(args) -> None:
+    """Show each address both ways.
+
+    i16 = this register alone (temperatures, SOC, status codes)
+    i32 = this register as the HIGH word + the next one (power values)
+    """
     client = connect(args.host, args.port)
     addrs = args.addr
-    print("time      " + "".join(f"{a:>10}" for a in addrs))
+    print("time      " + "".join(f"{f'{a} i16':>12}{f'{a} i32':>12}" for a in addrs))
     try:
         while True:
-            vals = []
+            cells = []
             for a in addrs:
                 regs = read_block(client, args.type, a, 2, args.unit)
-                vals.append("err" if regs is None else str(i32(*regs)))
-            print(time.strftime("%H:%M:%S  ") + "".join(f"{v:>10}" for v in vals), flush=True)
+                if regs is None:
+                    cells.append(f"{'err':>12}{'err':>12}")
+                else:
+                    cells.append(f"{i16(regs[0]):>12}{i32(*regs):>12}")
+            print(time.strftime("%H:%M:%S  ") + "".join(cells), flush=True)
             time.sleep(args.interval)
     except KeyboardInterrupt:
         pass
@@ -288,7 +296,7 @@ def main() -> None:
                    help="integration device YAML used to label known registers (needs PyYAML)")
     d.set_defaults(func=cmd_diff)
 
-    w = sub.add_parser("watch", help="print INT32 registers live")
+    w = sub.add_parser("watch", help="print registers live as INT16 and INT32")
     conn(w)
     w.add_argument("--addr", type=int, action="append", required=True)
     w.add_argument("--type", choices=("input", "holding"), default="input")

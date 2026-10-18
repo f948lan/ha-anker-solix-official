@@ -107,6 +107,9 @@
       "backup_output_power": {
         "name": "Sortie EPS"
       },
+      "battery_temperature": {
+        "name": "Température de la batterie"
+      },
       "pv_total_generation": {
         "name": "Production solaire totale"
       },

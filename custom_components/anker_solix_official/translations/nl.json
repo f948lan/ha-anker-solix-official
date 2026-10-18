@@ -107,6 +107,9 @@
       "backup_output_power": {
         "name": "EPS-uitvoer"
       },
+      "battery_temperature": {
+        "name": "Batterijtemperatuur"
+      },
       "pv_total_generation": {
         "name": "Totaal geproduceerde zonne-energie"
       },

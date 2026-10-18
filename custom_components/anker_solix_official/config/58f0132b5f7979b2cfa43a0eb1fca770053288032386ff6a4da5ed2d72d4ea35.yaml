@@ -77,6 +77,19 @@ read_quantities:
     count: 1
     icon: "mdi:battery"
 
+  # Battery temperature (matches the value shown in the Anker app).
+  # Community-reported in issues #64/#87, confirmed on E5000 firmware by
+  # live comparison with the app. 16-bit signed, 0.1 °C units. Last register
+  # of the existing 10090-10156 batch read, so no extra Modbus traffic.
+  battery_temperature:
+    translation_key: "battery_temperature"
+    address: 10156
+    data_type: "INT16"
+    unit: "°C"
+    gain: 10
+    count: 1
+    icon: "mdi:thermometer"
+
   # PV related data points
   # PV power = sum of PCS PV power(10002) + third-party PV power(10004)
   pv_power:
