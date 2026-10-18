@@ -78,6 +78,9 @@
       "ac_grid_output_power": {
         "name": "AC Output"
       },
+      "backup_output_power": {
+        "name": "EPS Output"
+      },
       "pv_total_generation": {
         "name": "Total Solar Generation"
       },

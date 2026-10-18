@@ -165,6 +165,21 @@ read_quantities:
     count: 2
     icon: "mdi:transmission-tower-export"
 
+  # EPS / backup (off-grid) socket output power.
+  # 10233 comes from a community register scan (issue #102), matching the X1
+  # "Backup Active Power" register and cross-checked against the Anker app.
+  # It sits inside the 10208-10265 batch range, so it costs no extra Modbus
+  # traffic. If your firmware moved it, find the new address with
+  # tools/scan_registers.py and change it here.
+  backup_output_power:
+    translation_key: "backup_output_power"
+    address: 10233
+    data_type: "INT32"
+    unit: "W"
+    gain: 1
+    count: 2
+    icon: "mdi:power-socket-eu"
+
   pv_total_generation:
     translation_key: "pv_total_generation"
     address: 10018

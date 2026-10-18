@@ -104,6 +104,9 @@
       "ac_grid_output_power": {
         "name": "AC-uitvoer"
       },
+      "backup_output_power": {
+        "name": "EPS-uitvoer"
+      },
       "pv_total_generation": {
         "name": "Totaal geproduceerde zonne-energie"
       },

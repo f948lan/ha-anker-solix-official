@@ -104,6 +104,9 @@
       "ac_grid_output_power": {
         "name": "Sortie CA"
       },
+      "backup_output_power": {
+        "name": "Sortie EPS"
+      },
       "pv_total_generation": {
         "name": "Production solaire totale"
       },
